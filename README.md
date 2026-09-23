@@ -25,44 +25,6 @@ bun run preview
 
 ---
 
-## 🗄️ Menghubungkan Turso DB (Opsional)
-
-Aplikasi ini menggunakan SQLite di edge via `@libsql/client/web`.
-
-### Langkah Cepat Setup Turso:
-1. Pasang CLI Turso jika belum ada:
-   ```bash
-   # Di Windows (PowerShell):
-   irm https://get.tur.so/install.ps1 | iex
-   ```
-2. Login ke akun Turso Anda:
-   ```bash
-   turso auth login
-   ```
-3. Buat database baru:
-   ```bash
-   turso db create money-db
-   ```
-4. Dapatkan URL database:
-   ```bash
-   turso db show money-db --url
-   ```
-5. Buat token autentikasi:
-   ```bash
-   turso db tokens create money-db
-   ```
-6. Masukkan URL dan Token ke dalam aplikasi:
-   - **Cara 1 (UI)**: Klik ikon **Settings (⚙️)** di navbar aplikasi, tempel URL dan Token, lalu klik **"Simpan & Hubungkan Turso"**.
-   - **Cara 2 (.env)**: Buat file `.env` di root project:
-     ```env
-     VITE_TURSO_DATABASE_URL=libsql://money-db-yourusername.turso.io
-     VITE_TURSO_AUTH_TOKEN=ey...
-     ```
-
-Tabel `transactions` dan `budgets` akan dibuat secara otomatis saat pertama kali terhubung!
-
----
-
 ## 📂 Struktur Folder Proyek
 
 ```
