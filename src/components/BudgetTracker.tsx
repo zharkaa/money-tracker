@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { AlertCircle, AlertTriangle, CheckCircle, Edit3, Save, Target } from 'lucide-react';
+import { AlertCircle, AlertTriangle, CheckCircle, Edit3, Save, Target, X } from 'lucide-react';
 import { formatRupiah } from '../lib/formatters';
 import type { BudgetStatusInfo } from '../lib/budget';
+
+const BUDGET_QUICK_AMOUNTS = [500000, 1000000, 2000000, 3000000, 5000000];
 
 interface BudgetTrackerProps {
   budgetInfo: BudgetStatusInfo;
@@ -23,6 +25,18 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
       setIsEditing(false);
     }
   };
+
+  const numericInput = Number(inputLimit.replace(/\D/g, '')) || 0;
+
+  const handleQuickAdd = (chipValue: number): void => {
+    setInputLimit((prevLimit) => {
+    // Fall back to 0 if the string input is empty or NaN
+    const currentNumber = parseFloat(prevLimit) || 0;
+    const newTotal = currentNumber + chipValue;
+    
+    return String(newTotal);
+  });
+  }
 
   const { status, percentage, spent, limit, remaining } = budgetInfo;
   const clampedWidth = Math.min(percentage, 100);
@@ -89,32 +103,78 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
 
       {/* Edit Budget Form */}
       {isEditing && (
-        <form onSubmit={handleSave} className="p-3 bg-slate-800/80 rounded-xl border border-slate-700 flex flex-wrap items-center gap-2">
-          <label htmlFor="budget-input" className="text-xs font-medium text-slate-300 w-full sm:w-auto">
-            Batas Anggaran Baru (Rp):
-          </label>
-          <input
-            id="budget-input"
-            type="number"
-            min="10000"
-            value={inputLimit}
-            onChange={(e) => setInputLimit(e.target.value)}
-            className="px-3 py-1.5 text-sm bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none flex-1 max-w-xs text-white placeholder:text-slate-500"
-            placeholder="Contoh: 5000000"
-          />
-          <button
-            type="submit"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors"
-          >
-            <Save className="w-3.5 h-3.5" /> Simpan
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsEditing(false)}
-            className="px-3 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-700 rounded-lg text-xs font-medium transition-colors"
-          >
-            Batal
-          </button>
+        <form onSubmit={handleSave} className="p-4 bg-slate-800/80 rounded-xl border border-slate-700 space-y-3">
+          <div className="flex items-center justify-between">
+            <label htmlFor="budget-input" className="text-xs font-semibold text-slate-300">
+              Batas Anggaran Baru (Rp):
+            </label>
+            {numericInput > 0 && (
+              <span className="text-xs font-bold text-teal-400 bg-teal-950/80 px-2 py-0.5 rounded-md border border-teal-800/60">
+                {formatRupiah(numericInput)}
+              </span>
+            )}
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-bold text-sm">
+              Rp
+            </div>
+            <input
+              id="budget-input"
+              type="text"
+              inputMode="numeric"
+              value={inputLimit ? Number(inputLimit).toLocaleString('id-ID') : ''}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, '');
+                setInputLimit(raw);
+              }}
+              className="w-full pl-12 pr-4 py-2.5 text-base font-bold bg-slate-900 border border-slate-700 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none text-white placeholder:text-slate-500 transition-all"
+              placeholder="Contoh: 5.000.000"
+            />
+          </div>
+
+          {/* Quick Amount Chips */}
+          <div className="flex flex-wrap gap-1.5">
+            {BUDGET_QUICK_AMOUNTS.map((quick) => (
+              <button
+                key={quick}
+                type="button"
+                onClick={() => handleQuickAdd(quick)}
+                className={`text-[11px] font-medium px-2 py-1 rounded-lg border transition-colors ${
+                  numericInput === quick
+                    ? 'border-teal-600 bg-teal-900/60 text-teal-300'
+                    : 'border-slate-700 bg-slate-800 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white'
+                }`}
+              >
+                {formatRupiah(quick)}
+              </button>
+            ))}
+            {numericInput > 0 && (
+              <button
+                type="button"
+                onClick={() => setInputLimit('')}
+                className="text-[11px] font-medium px-2 py-1 rounded-lg border border-rose-800/60 bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 transition-colors"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 pt-1">
+            <button
+              type="submit"
+              className="flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+            >
+              <Save className="w-3.5 h-3.5" /> Simpan
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="flex items-center gap-1.5 px-3 py-2 text-slate-400 hover:text-slate-200 hover:bg-slate-700 rounded-xl text-xs font-medium transition-colors"
+            >
+              <X className="w-3.5 h-3.5" /> Batal
+            </button>
+          </div>
         </form>
       )}
 
