@@ -6,6 +6,7 @@ import {
   Search,
   Trash2,
 } from 'lucide-react';
+import { ConfirmationModal } from './ConfirmationModal';
 import { formatDateIndo, formatRupiah } from '../lib/formatters';
 import type { Transaction, TransactionType } from '../types';
 
@@ -20,6 +21,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
 }) => {
   const [filterType, setFilterType] = useState<'all' | TransactionType>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [txToDelete, setTxToDelete] = useState<Transaction | null>(null);
 
   const filteredTransactions = transactions.filter((tx) => {
     // Type filter
@@ -159,11 +161,7 @@ export const TransactionList: React.FC<TransactionListProps> = ({
                     </span>
                   </div>
                   <button
-                    onClick={() => {
-                      if (window.confirm('Hapus transaksi ini?')) {
-                        onDeleteTransaction(tx.id);
-                      }
-                    }}
+                    onClick={() => setTxToDelete(tx)}
                     className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors opacity-70 group-hover:opacity-100"
                     title="Hapus transaksi"
                     aria-label="Hapus transaksi"
@@ -176,6 +174,59 @@ export const TransactionList: React.FC<TransactionListProps> = ({
           })}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={Boolean(txToDelete)}
+        onClose={() => setTxToDelete(null)}
+        onConfirm={() => {
+          if (txToDelete) {
+            onDeleteTransaction(txToDelete.id);
+            setTxToDelete(null);
+          }
+        }}
+        title="Hapus Transaksi?"
+        message="Apakah Anda yakin ingin menghapus catatan transaksi ini? Tindakan ini tidak dapat dibatalkan."
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        isDestructive={true}
+      >
+        {txToDelete && (
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+            <div className="min-w-0">
+              <span className="font-bold text-slate-900 block text-sm">
+                {txToDelete.category || (txToDelete.type === 'income' ? 'Pemasukan' : 'Pengeluaran')}
+              </span>
+              {txToDelete.note && (
+                <span className="text-slate-500 block text-xs truncate mt-0.5">
+                  {txToDelete.note}
+                </span>
+              )}
+              <span className="text-slate-400 text-[11px] block mt-0.5">
+                {formatDateIndo(txToDelete.date)}
+              </span>
+            </div>
+            <div className="text-right shrink-0">
+              <span
+                className={`font-bold text-sm block ${
+                  txToDelete.type === 'income' ? 'text-emerald-700' : 'text-rose-700'
+                }`}
+              >
+                {txToDelete.type === 'income' ? '+' : '-'} {formatRupiah(txToDelete.amount)}
+              </span>
+              <span
+                className={`text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded-full inline-block mt-0.5 ${
+                  txToDelete.type === 'income'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-rose-100 text-rose-800'
+                }`}
+              >
+                {txToDelete.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+              </span>
+            </div>
+          </div>
+        )}
+      </ConfirmationModal>
     </div>
   );
 };

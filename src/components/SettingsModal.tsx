@@ -17,6 +17,7 @@ import {
   initDb,
   saveTursoConfig,
 } from '../lib/db';
+import { ConfirmationModal } from './ConfirmationModal';
 import type { DbMode } from '../types';
 
 interface SettingsModalProps {
@@ -40,6 +41,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     type: 'success' | 'error' | 'info';
     text: string;
   } | null>(null);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
 
   if (!isOpen) return null;
 
@@ -78,20 +80,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     onConfigChanged();
   };
 
-  const handleResetData = () => {
-    if (
-      window.confirm(
-        'PERINGATAN: Ini akan menghapus semua data transaksi & anggaran di penyimpanan lokal browser. Lanjutkan?'
-      )
-    ) {
-      localStorage.removeItem('money_tracker_local_transactions');
-      localStorage.removeItem('money_tracker_local_budget');
-      onConfigChanged();
-      setStatusMsg({
-        type: 'info',
-        text: 'Data lokal berhasil dibersihkan.',
-      });
-    }
+  const performReset = () => {
+    localStorage.removeItem('money_tracker_local_transactions');
+    localStorage.removeItem('money_tracker_local_budget');
+    onConfigChanged();
+    setStatusMsg({
+      type: 'info',
+      text: 'Data lokal berhasil dibersihkan.',
+    });
   };
 
   const dbErr = getDbLastError();
@@ -243,13 +239,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <span className="text-[11px] text-slate-400">Pembersihan data peramban</span>
           <button
             type="button"
-            onClick={handleResetData}
+            onClick={() => setIsResetConfirmOpen(true)}
             className="text-[11px] font-medium text-rose-600 hover:text-rose-700 flex items-center gap-1 p-1 hover:bg-rose-50 rounded-lg transition-colors"
           >
             <Trash2 className="w-3 h-3" /> Bersihkan Cache Data Lokal
           </button>
         </div>
       </div>
+
+      {/* Confirmation Modal for Clearing Local Data */}
+      <ConfirmationModal
+        isOpen={isResetConfirmOpen}
+        onClose={() => setIsResetConfirmOpen(false)}
+        onConfirm={performReset}
+        title="Bersihkan Data Lokal?"
+        message="PERINGATAN: Semua data transaksi dan anggaran yang tersimpan di penyimpanan lokal browser Anda akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan."
+        confirmText="Ya, Bersihkan Data"
+        cancelText="Batal"
+        isDestructive={true}
+      />
     </div>
   );
 };

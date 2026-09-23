@@ -96,8 +96,8 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
           <input
             id="budget-input"
             type="number"
-            min="0"
-            step="50000"
+            min="10000"
+            // step="50000"
             value={inputLimit}
             onChange={(e) => setInputLimit(e.target.value)}
             className="px-3 py-1.5 text-sm bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none flex-1 max-w-xs"
