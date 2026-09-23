@@ -1,6 +1,6 @@
 # 💰 Money Tracker Web App (Rupiah IDR)
 
-Aplikasi pencatatan keuangan pribadi modern, ringan, dan mudah dikembangkan yang dibangun dengan **React 19**, **TypeScript**, **Vite**, **Tailwind CSS v4**, dan **Turso DB (LibSQL Edge Database)**.
+Aplikasi pencatatan keuangan pribadi modern, ringan, dan mudah dikembangkan yang dibangun dengan **React 19**, **TypeScript**, **Vite**, **Tailwind CSS v4**, **Bun**, dan **Turso DB (LibSQL Edge Database)**.
 
 ---
 
@@ -13,15 +13,13 @@ Aplikasi pencatatan keuangan pribadi modern, ringan, dan mudah dikembangkan yang
    - Kategori & catatan opsional.
    - Daftar riwayat transaksi dengan filter (Semua / Pemasukan / Pengeluaran), pencarian, dan hapus transaksi.
 
-2. **Pelacakan Anggaran & Notifikasi (Budget Tracking & Push Alerts)**
-   - Target batas anggaran pengeluaran bulanan (dapat diedit sewaktu-waktu).
-   - Progress bar visual dengan 3 indikator status:
+2. **Pelacakan Anggaran Visual (Visual Budget Tracking)**
+   - Target batas anggaran pengeluaran bulanan (dapat diedit langsung dari UI).
+   - Progress bar visual yang dinamis dengan 3 indikator status warna:
      - 🟢 **Aman** (< 80% dari batas anggaran)
      - 🟡 **Mendekati Batas** (80% - 99% dari batas anggaran)
      - 🔴 **Melebihi Batas** (≥ 100% dari batas anggaran)
-   - **Push Notification Browser** (menggunakan Web Notification API) saat mencapai 80% dan 100%.
-   - In-app toast notification sebagai fallback jika browser menolak notifikasi.
-   - Tombol **"Tes Push Notif"** untuk memverifikasi izin notifikasi di perangkat Anda.
+   - Informasi sisa batas belanja dan banner peringatan saat mendekati/melebihi limit.
 
 3. **Dasbor Analisis Sederhana (Barebone Analytics Dashboard)**
    - Total Pemasukan bulan ini / semua waktu.
@@ -32,28 +30,33 @@ Aplikasi pencatatan keuangan pribadi modern, ringan, dan mudah dikembangkan yang
 
 4. **Arsitektur Database Ramah Developer (Turso DB + Local Storage Fallback)**
    - Siap dipakai langsung (*out-of-the-box*) dengan **Local Storage** tanpa perlu setup akun database terlebih dahulu!
-   - Saat siap, hubungkan ke **Turso DB** kapan saja melalui tombol **Settings (⚙️)** di pojok kanan atas atau via file `.env`.
+   - Saat siap, hubungkan ke **Turso DB** kapan saja melalui tombol **Settings (⚙️)** di navbar aplikasi atau via file `.env`.
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+## 🚀 Cara Menjalankan Aplikasi (Menggunakan Bun)
 
 ### 1. Install Dependencies
-Pastikan Node.js (v18+) sudah terpasang, lalu jalankan:
 ```bash
-npm install
+bun install
 ```
 
 ### 2. Jalankan Server Development
 ```bash
-npm run dev
+bun dev
 ```
-Buka browser di `http://localhost:5173`.
+Buka peramban di `http://localhost:5173`.
 
-### 3. Build untuk Produksi
+### 3. Build & Linting
 ```bash
-npm run build
-npm run preview
+# Cek linting
+bun run lint
+
+# Build untuk produksi
+bun run build
+
+# Pratinjau hasil build
+bun run preview
 ```
 
 ---
@@ -98,38 +101,28 @@ Tabel `transactions` dan `budgets` akan dibuat secara otomatis saat pertama kali
 
 ## 📂 Struktur Folder Proyek
 
-Struktur dibuat sangat modular dan bersih agar mudah dipelajari serta dikembangkan:
-
 ```
 money-tracker/
 ├── src/
 │   ├── components/
-│   │   ├── Navbar.tsx           # Navigasi atas, status DB & tombol notifikasi
+│   │   ├── Navbar.tsx           # Navigasi atas, status DB & tombol settings
 │   │   ├── Dashboard.tsx        # Kartu ringkasan finansial & saldo
-│   │   ├── BudgetTracker.tsx    # Progress bar visual & alert anggaran
+│   │   ├── BudgetTracker.tsx    # Progress bar visual & status anggaran
 │   │   ├── TransactionForm.tsx  # Form input transaksi & quick chips Rp
 │   │   ├── TransactionList.tsx  # Riwayat transaksi, filter & pencarian
 │   │   ├── SettingsModal.tsx    # Modal konfigurasi Turso DB
-│   │   └── Toast.tsx            # Sistem notifikasi popup in-app
+│   │   └── Toast.tsx            # Sistem notifikasi popup in-app untuk aksi
 │   ├── lib/
 │   │   ├── db.ts                # Handler koneksi Turso & LocalStorage fallback
 │   │   ├── formatters.ts        # Helper format Rupiah (IDR) & tanggal Indonesia
-│   │   └── notifications.ts     # Logika Web Notification API & threshold alerts
+│   │   └── budget.ts            # Logika kalkulasi progress & status anggaran
 │   ├── types/
 │   │   └── index.ts             # Definisi TypeScript interface
 │   ├── App.tsx                  # Komponen utama yang merangkai state
 │   ├── index.css                # Konfigurasi Tailwind CSS v4
 │   └── main.tsx                 # Entry point React
-├── .env.example                 # Contoh template environment variable
+├── .env.example                 # Template environment variables
+├── bun.lock                     # Bun lockfile
 ├── package.json
 └── vite.config.ts
 ```
-
----
-
-## 💡 Ide Pengembangan Selanjutnya
-
-Kode ini dirancang agar mudah ditambah fitur baru:
-- Ekspor laporan ke format CSV / PDF.
-- Grafik visual pengeluaran per kategori (Pie Chart / Bar Chart).
-- Kustomisasi kategori belanja baru langsung dari UI.

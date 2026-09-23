@@ -19,15 +19,6 @@ export interface Budget {
 
 export type BudgetStatus = 'safe' | 'approaching' | 'exceeded';
 
-export interface BudgetAlert {
-  status: BudgetStatus;
-  percentage: number;
-  spent: number;
-  limit: number;
-  remaining: number;
-  message?: string;
-}
-
 export interface TursoConfig {
   url: string;
   token: string;

@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
-import { AlertCircle, AlertTriangle, CheckCircle, Edit3, HelpCircle, Save, Send, Target } from 'lucide-react';
+import { AlertCircle, AlertTriangle, CheckCircle, Edit3, Save, Target } from 'lucide-react';
 import { formatRupiah } from '../lib/formatters';
-import { sendTestNotification } from '../lib/notifications';
-import type { BudgetAlert } from '../types';
+import type { BudgetStatusInfo } from '../lib/budget';
 
 interface BudgetTrackerProps {
-  budgetAlert: BudgetAlert;
+  budgetInfo: BudgetStatusInfo;
   onUpdateBudget: (newLimit: number) => void;
-  onRequestNotificationPermission: () => void;
-  notificationPermission: NotificationPermission;
 }
 
 export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
-  budgetAlert,
+  budgetInfo,
   onUpdateBudget,
-  onRequestNotificationPermission,
-  notificationPermission,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [inputLimit, setInputLimit] = useState(String(budgetAlert.limit));
-  const [testSent, setTestSent] = useState(false);
+  const [inputLimit, setInputLimit] = useState(String(budgetInfo.limit));
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,19 +24,7 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
     }
   };
 
-  const handleTriggerTestNotification = async () => {
-    if (notificationPermission !== 'granted') {
-      onRequestNotificationPermission();
-      return;
-    }
-    const success = sendTestNotification();
-    if (success) {
-      setTestSent(true);
-      setTimeout(() => setTestSent(false), 3000);
-    }
-  };
-
-  const { status, percentage, spent, limit, remaining } = budgetAlert;
+  const { status, percentage, spent, limit, remaining } = budgetInfo;
   const clampedWidth = Math.min(percentage, 100);
 
   // Status visual cues
@@ -59,14 +41,14 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
 
   if (isApproaching) {
     statusBadge = (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 animate-pulse">
+      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
         <AlertTriangle className="w-3.5 h-3.5" /> Mendekati Batas ({percentage}%)
       </span>
     );
     barColor = 'bg-amber-500';
   } else if (isExceeded) {
     statusBadge = (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 animate-bounce">
+      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">
         <AlertCircle className="w-3.5 h-3.5" /> Melebihi Batas ({percentage}%)
       </span>
     );
@@ -83,7 +65,7 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-base">Pelacakan Anggaran Bulanan</h3>
-            <p className="text-xs text-slate-500">Monitor penggunaan anggaran & notifikasi otomatis</p>
+            <p className="text-xs text-slate-500">Monitor penggunaan batas anggaran belanja Anda</p>
           </div>
         </div>
 
@@ -171,12 +153,12 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
             )}
           </div>
           <span className="text-[11px] text-slate-400">
-            {percentage < 80 ? 'Peringatan otomatis aktif di 80% & 100%' : 'Peringatan batas telah dipicu'}
+            Target per bulan
           </span>
         </div>
       </div>
 
-      {/* Threshold Alert Notification Banner */}
+      {/* Threshold Alert Banner */}
       {(isApproaching || isExceeded) && (
         <div
           className={`p-3.5 rounded-xl border flex items-start gap-3 ${
@@ -192,31 +174,10 @@ export const BudgetTracker: React.FC<BudgetTrackerProps> = ({
             <strong className="font-semibold block text-sm">
               {isExceeded ? 'Batas Anggaran Terlampaui!' : 'Pengeluaran Mendekati Batas!'}
             </strong>
-            {budgetAlert.message}
+            {budgetInfo.message}
           </div>
         </div>
       )}
-
-      {/* Footer Tools: Push Notification Tester */}
-      <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-1.5 text-xs text-slate-500">
-          <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
-          <span>
-            {notificationPermission === 'granted'
-              ? 'Notifikasi browser diizinkan'
-              : 'Aktifkan notifikasi untuk menerima alert saat browser di latar belakang'}
-          </span>
-        </div>
-
-        <button
-          onClick={handleTriggerTestNotification}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
-          title="Kirim notifikasi uji coba"
-        >
-          <Send className="w-3 h-3 text-slate-500" />
-          {testSent ? 'Terkirim!' : 'Tes Push Notif'}
-        </button>
-      </div>
     </div>
   );
 };

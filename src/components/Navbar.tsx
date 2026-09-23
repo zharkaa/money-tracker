@@ -1,20 +1,13 @@
 import React from 'react';
-import { Bell, BellCheck, BellOff, Database, Settings, Wallet } from 'lucide-react';
+import { Database, Settings, Wallet } from 'lucide-react';
 import type { DbMode } from '../types';
 
 interface NavbarProps {
   dbMode: DbMode;
-  notificationPermission: NotificationPermission;
-  onRequestNotification: () => void;
   onOpenSettings: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
-  dbMode,
-  notificationPermission,
-  onRequestNotification,
-  onOpenSettings,
-}) => {
+export const Navbar: React.FC<NavbarProps> = ({ dbMode, onOpenSettings }) => {
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -51,42 +44,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 dbMode === 'turso' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
               }`}
             />
-          </button>
-
-          {/* Push Notification Button */}
-          <button
-            onClick={onRequestNotification}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-              notificationPermission === 'granted'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                : notificationPermission === 'denied'
-                ? 'bg-rose-50 text-rose-700 border-rose-200 opacity-80 cursor-not-allowed'
-                : 'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100'
-            }`}
-            title={
-              notificationPermission === 'granted'
-                ? 'Notifikasi browser aktif'
-                : notificationPermission === 'denied'
-                ? 'Notifikasi diblokir oleh browser'
-                : 'Klik untuk mengaktifkan push notifikasi batas anggaran'
-            }
-          >
-            {notificationPermission === 'granted' ? (
-              <>
-                <BellCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="hidden md:inline">Notif Aktif</span>
-              </>
-            ) : notificationPermission === 'denied' ? (
-              <>
-                <BellOff className="w-3.5 h-3.5 text-rose-600" />
-                <span className="hidden md:inline">Notif Diblokir</span>
-              </>
-            ) : (
-              <>
-                <Bell className="w-3.5 h-3.5 text-indigo-600 animate-bounce" />
-                <span className="hidden md:inline">Aktifkan Notif</span>
-              </>
-            )}
           </button>
 
           {/* Settings Button */}

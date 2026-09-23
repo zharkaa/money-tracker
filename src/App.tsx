@@ -6,6 +6,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { ToastContainer } from './components/Toast';
 import { TransactionForm } from './components/TransactionForm';
 import { TransactionList } from './components/TransactionList';
+import { evaluateBudgetStatus } from './lib/budget';
 import {
   createTransaction,
   fetchBudget,
@@ -16,11 +17,6 @@ import {
   updateBudget,
 } from './lib/db';
 import { formatRupiah } from './lib/formatters';
-import {
-  evaluateBudgetStatus,
-  getNotificationPermission,
-  requestNotificationPermission,
-} from './lib/notifications';
 import type { Budget, DbMode, ToastMessage, Transaction } from './types';
 
 export function App() {
@@ -32,9 +28,6 @@ export function App() {
     updatedAt: new Date().toISOString(),
   });
   const [dbMode, setDbMode] = useState<DbMode>('local');
-  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>(
-    getNotificationPermission()
-  );
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -108,25 +101,6 @@ export function App() {
       ignore = true;
     };
   }, [addToast]);
-
-  // Request Notification Permission
-  const handleRequestNotification = async () => {
-    const perm = await requestNotificationPermission();
-    setNotificationPermission(perm);
-    if (perm === 'granted') {
-      addToast({
-        type: 'success',
-        title: 'Notifikasi Diaktifkan!',
-        message: 'Anda akan menerima pemberitahuan otomatis saat pengeluaran mendekati atau melebihi anggaran.',
-      });
-    } else if (perm === 'denied') {
-      addToast({
-        type: 'danger',
-        title: 'Izin Ditolak',
-        message: 'Browser memblokir notifikasi. Anda dapat mengizinkannya di pengaturan peramban jika diinginkan.',
-      });
-    }
-  };
 
   // Add Transaction Handler
   const handleAddTransaction = async (txData: Omit<Transaction, 'id' | 'createdAt'>) => {
@@ -225,8 +199,8 @@ export function App() {
       .reduce((sum, tx) => sum + tx.amount, 0);
   }, [transactions, currentYearMonth]);
 
-  // Budget status evaluation & automated alerts
-  const budgetAlert = useMemo(() => {
+  // Budget status evaluation
+  const budgetInfo = useMemo(() => {
     return evaluateBudgetStatus(currentMonthExpense, budget.limitAmount);
   }, [currentMonthExpense, budget.limitAmount]);
 
@@ -235,8 +209,6 @@ export function App() {
       {/* Navigation */}
       <Navbar
         dbMode={dbMode}
-        notificationPermission={notificationPermission}
-        onRequestNotification={handleRequestNotification}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
@@ -256,7 +228,7 @@ export function App() {
               totalExpense={totalExpense}
               netBalance={netBalance}
               budgetLimit={budget.limitAmount}
-              remainingBudget={budgetAlert.remaining}
+              remainingBudget={budgetInfo.remaining}
               selectedMonth={selectedMonth}
               onMonthChange={setSelectedMonth}
               availableMonths={availableMonths}
@@ -266,12 +238,10 @@ export function App() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               {/* Left Column: Budget Tracker & Transaction Form */}
               <div className="lg:col-span-5 space-y-6">
-                {/* Feature 2: Visual Budget Tracker with Push Notifications */}
+                {/* Feature 2: Visual Budget Tracker with Progress Bar */}
                 <BudgetTracker
-                  budgetAlert={budgetAlert}
+                  budgetInfo={budgetInfo}
                   onUpdateBudget={handleUpdateBudget}
-                  onRequestNotificationPermission={handleRequestNotification}
-                  notificationPermission={notificationPermission}
                 />
 
                 {/* Feature 1: Transaction Recording Form */}
@@ -301,7 +271,7 @@ export function App() {
         }}
       />
 
-      {/* Toast Notifications */}
+      {/* Toast Notifications for user actions */}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
