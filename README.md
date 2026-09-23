@@ -1,39 +1,3 @@
-# 💰 Money Tracker Web App (Rupiah IDR)
-
-Aplikasi pencatatan keuangan pribadi modern, ringan, dan mudah dikembangkan yang dibangun dengan **React 19**, **TypeScript**, **Vite**, **Tailwind CSS v4**, **Bun**, dan **Turso DB (LibSQL Edge Database)**.
-
----
-
-## ✨ Fitur Utama
-
-1. **Pencatatan Transaksi (Transaction Record)**
-   - Pilihan tipe: **Pemasukan (Income)** atau **Pengeluaran (Expense)**.
-   - Input nominal dalam **Rupiah (Rp)** dengan format otomatis & tombol *quick-add* (+Rp 10.000, +Rp 50.000, +Rp 100.000, +Rp 500.000).
-   - Pemilihan tanggal (default hari ini).
-   - Kategori & catatan opsional.
-   - Daftar riwayat transaksi dengan filter (Semua / Pemasukan / Pengeluaran), pencarian, dan hapus transaksi.
-
-2. **Pelacakan Anggaran Visual (Visual Budget Tracking)**
-   - Target batas anggaran pengeluaran bulanan (dapat diedit langsung dari UI).
-   - Progress bar visual yang dinamis dengan 3 indikator status warna:
-     - 🟢 **Aman** (< 80% dari batas anggaran)
-     - 🟡 **Mendekati Batas** (80% - 99% dari batas anggaran)
-     - 🔴 **Melebihi Batas** (≥ 100% dari batas anggaran)
-   - Informasi sisa batas belanja dan banner peringatan saat mendekati/melebihi limit.
-
-3. **Dasbor Analisis Sederhana (Barebone Analytics Dashboard)**
-   - Total Pemasukan bulan ini / semua waktu.
-   - Total Pengeluaran bulan ini / semua waktu.
-   - Saldo Bersih (*Net Balance* = Pemasukan - Pengeluaran).
-   - Sisa Anggaran belanja.
-   - Filter transaksi berdasarkan bulan.
-
-4. **Arsitektur Database Ramah Developer (Turso DB + Local Storage Fallback)**
-   - Siap dipakai langsung (*out-of-the-box*) dengan **Local Storage** tanpa perlu setup akun database terlebih dahulu!
-   - Saat siap, hubungkan ke **Turso DB** kapan saja melalui tombol **Settings (⚙️)** di navbar aplikasi atau via file `.env`.
-
----
-
 ## 🚀 Cara Menjalankan Aplikasi (Menggunakan Bun)
 
 ### 1. Install Dependencies
