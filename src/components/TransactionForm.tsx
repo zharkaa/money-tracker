@@ -78,25 +78,25 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
   const numericAmount = Number(amount.replace(/\D/g, '')) || 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
+    <div className="bg-slate-900 rounded-2xl border border-slate-800/80 p-5 shadow-sm space-y-4">
       {/* Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="font-bold text-slate-900 text-base">Catat Transaksi Baru</h3>
-          <p className="text-xs text-slate-500">Input pemasukan atau pengeluaran Anda</p>
+          <h3 className="font-bold text-white text-base">Catat Transaksi Baru</h3>
+          <p className="text-xs text-slate-400">Input pemasukan atau pengeluaran Anda</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Type Toggle Tabs */}
-        <div className="grid grid-cols-2 p-1 bg-slate-100 rounded-xl">
+        <div className="grid grid-cols-2 p-1 bg-slate-800/80 rounded-xl border border-slate-700/60">
           <button
             type="button"
             onClick={() => handleTypeChange('expense')}
             className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${
               type === 'expense'
                 ? 'bg-rose-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <ArrowUpCircle className="w-4 h-4" /> Pengeluaran
@@ -107,7 +107,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
             className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all ${
               type === 'income'
                 ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <ArrowDownCircle className="w-4 h-4" /> Pemasukan
@@ -117,17 +117,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
         {/* Amount Input */}
         <div className="space-y-1.5">
           <div className="flex justify-between items-center">
-            <label htmlFor="tx-amount" className="text-xs font-semibold text-slate-700">
+            <label htmlFor="tx-amount" className="text-xs font-semibold text-slate-300">
               Nominal (Rupiah) <span className="text-rose-500">*</span>
             </label>
             {numericAmount > 0 && (
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+              <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-800/60">
                 {formatRupiah(numericAmount)}
               </span>
             )}
           </div>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-bold text-sm">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 font-bold text-sm">
               Rp
             </div>
             <input
@@ -140,7 +140,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
                 setAmount(raw);
               }}
               placeholder="0"
-              className="w-full pl-12 pr-4 py-2.5 text-base font-bold bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all placeholder:text-slate-300"
+              className="w-full pl-12 pr-4 py-2.5 text-base font-bold bg-slate-800/80 border border-slate-700 rounded-xl text-white focus:bg-slate-850 focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all placeholder:text-slate-500"
               required
             />
           </div>
@@ -152,7 +152,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
                 key={quick}
                 type="button"
                 onClick={() => handleQuickAdd(quick)}
-                className="text-[11px] font-medium px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300 text-slate-700 transition-colors"
+                className="text-[11px] font-medium px-2 py-1 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white transition-colors"
               >
                 +{formatRupiah(quick)}
               </button>
@@ -161,7 +161,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
               <button
                 type="button"
                 onClick={() => setAmount('')}
-                className="text-[11px] font-medium px-2 py-1 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors"
+                className="text-[11px] font-medium px-2 py-1 rounded-lg border border-rose-800/60 bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 transition-colors"
               >
                 Reset
               </button>
@@ -171,8 +171,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
 
         {/* Date Input */}
         <div className="space-y-1.5">
-          <label htmlFor="tx-date" className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+          <label htmlFor="tx-date" className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5 text-slate-500" />
             Tanggal <span className="text-rose-500">*</span>
           </label>
           <input
@@ -180,22 +180,22 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all"
+            className="w-full px-3.5 py-2 text-sm bg-slate-800/80 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all [color-scheme:dark]"
             required
           />
         </div>
 
         {/* Category Selection */}
         <div className="space-y-1.5">
-          <label htmlFor="tx-category" className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-            <Tag className="w-3.5 h-3.5 text-slate-400" />
+          <label htmlFor="tx-category" className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <Tag className="w-3.5 h-3.5 text-slate-500" />
             Kategori
           </label>
           <select
             id="tx-category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all text-slate-800"
+            className="w-full px-3.5 py-2 text-sm bg-slate-800/80 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all [color-scheme:dark]"
           >
             {(type === 'expense' ? COMMON_EXPENSE_CATEGORIES : COMMON_INCOME_CATEGORIES).map(
               (cat) => (
@@ -209,7 +209,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
 
         {/* Note / Description (Optional) */}
         <div className="space-y-1.5">
-          <label htmlFor="tx-note" className="text-xs font-semibold text-slate-700">
+          <label htmlFor="tx-note" className="text-xs font-semibold text-slate-300">
             Catatan (Opsional)
           </label>
           <input
@@ -218,13 +218,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({ onAddTransacti
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Contoh: Belanja mingguan di pasar / Bonus proyek"
-            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all placeholder:text-slate-400"
+            className="w-full px-3.5 py-2 text-sm bg-slate-800/80 border border-slate-700 rounded-xl text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all placeholder:text-slate-500"
           />
         </div>
 
         {/* Error message */}
         {error && (
-          <p className="text-xs text-rose-600 bg-rose-50 p-2.5 rounded-lg border border-rose-200">
+          <p className="text-xs text-rose-200 bg-rose-950/60 p-2.5 rounded-lg border border-rose-800/60">
             {error}
           </p>
         )}

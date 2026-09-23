@@ -26,10 +26,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <div className="space-y-4">
       {/* Month Filter Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 p-4 rounded-2xl border border-slate-800/80 shadow-sm">
         <div>
-          <h2 className="text-base font-bold text-slate-900">Ringkasan Keuangan</h2>
-          <p className="text-xs text-slate-500">Ikhtisar pemasukan, pengeluaran, dan saldo Anda</p>
+          <h2 className="text-base font-bold text-white">Ringkasan Keuangan</h2>
+          <p className="text-xs text-slate-400">Ikhtisar pemasukan, pengeluaran, dan saldo Anda</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -37,7 +37,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <select
             value={selectedMonth}
             onChange={(e) => onMonthChange(e.target.value)}
-            className="text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-700"
+            className="text-xs font-medium bg-slate-800/90 border border-slate-700 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-200"
             aria-label="Pilih Periode Bulan"
           >
             <option value="all">Semua Waktu</option>
@@ -60,54 +60,56 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Analytics Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Income */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800/80 shadow-sm hover:border-slate-700 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Total Pemasukan
             </span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-emerald-950/60 text-emerald-400 flex items-center justify-center border border-emerald-800/40">
               <ArrowDownRight className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <h3 className="text-xl font-bold text-emerald-700 tracking-tight">
+            <h3 className="text-xl font-bold text-emerald-400 tracking-tight">
               {formatRupiah(totalIncome)}
             </h3>
-            <p className="text-xs text-emerald-600/80 mt-1 flex items-center gap-1">
+            <p className="text-xs text-emerald-500/80 mt-1 flex items-center gap-1">
               <span>Dana masuk</span>
             </p>
           </div>
         </div>
 
         {/* Total Expense */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800/80 shadow-sm hover:border-slate-700 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Total Pengeluaran
             </span>
-            <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-rose-950/60 text-rose-400 flex items-center justify-center border border-rose-800/40">
               <ArrowUpRight className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <h3 className="text-xl font-bold text-rose-700 tracking-tight">
+            <h3 className="text-xl font-bold text-rose-400 tracking-tight">
               {formatRupiah(totalExpense)}
             </h3>
-            <p className="text-xs text-rose-600/80 mt-1 flex items-center gap-1">
+            <p className="text-xs text-rose-500/80 mt-1 flex items-center gap-1">
               <span>Dana terpakai</span>
             </p>
           </div>
         </div>
 
         {/* Net Balance */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800/80 shadow-sm hover:border-slate-700 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Saldo Bersih
             </span>
             <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                netBalance >= 0 ? 'bg-indigo-50 text-indigo-600' : 'bg-rose-50 text-rose-600'
+              className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
+                netBalance >= 0
+                  ? 'bg-indigo-950/60 text-indigo-400 border-indigo-800/40'
+                  : 'bg-rose-950/60 text-rose-400 border-rose-800/40'
               }`}
             >
               <WalletCards className="w-5 h-5" />
@@ -116,36 +118,36 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <div className="mt-3">
             <h3
               className={`text-xl font-bold tracking-tight ${
-                netBalance >= 0 ? 'text-indigo-900' : 'text-rose-600'
+                netBalance >= 0 ? 'text-indigo-300' : 'text-rose-400'
               }`}
             >
               {formatRupiah(netBalance)}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               {netBalance >= 0 ? 'Surplus keuangan' : 'Defisit (Pengeluaran > Pemasukan)'}
             </p>
           </div>
         </div>
 
         {/* Budget Remaining */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-slate-900 p-5 rounded-2xl border border-slate-800/80 shadow-sm hover:border-slate-700 transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Sisa Anggaran
             </span>
-            <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-teal-950/60 text-teal-400 flex items-center justify-center border border-teal-800/40">
               <PiggyBank className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
             <h3
               className={`text-xl font-bold tracking-tight ${
-                remainingBudget <= 0 && budgetLimit > 0 ? 'text-rose-600' : 'text-teal-700'
+                remainingBudget <= 0 && budgetLimit > 0 ? 'text-rose-400' : 'text-teal-400'
               }`}
             >
               {formatRupiah(remainingBudget)}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-400 mt-1">
               Dari batas {formatRupiah(budgetLimit)}
             </p>
           </div>
