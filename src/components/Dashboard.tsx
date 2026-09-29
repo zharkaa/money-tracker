@@ -29,7 +29,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 p-4 rounded-2xl border border-slate-800/80 shadow-sm">
         <div>
           <h2 className="text-base font-bold text-white">Ringkasan Keuangan</h2>
-          <p className="text-xs text-slate-400">Ikhtisar pemasukan, pengeluaran, dan saldo Anda</p>
+          <p className="text-xs text-slate-400">Pemasukan, pengeluaran, dan saldo Anda</p>
         </div>
 
         <div className="flex items-center gap-2">

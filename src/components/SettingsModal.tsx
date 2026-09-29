@@ -4,13 +4,10 @@ import {
   CheckCircle,
   Cloud,
   CloudOff,
-  // Copy,
   Database,
-  ExternalLink,
   HardDrive,
   Info,
   RefreshCw,
-  Terminal,
   Trash2,
   X,
 } from 'lucide-react';
@@ -30,37 +27,6 @@ interface SettingsModalProps {
   onConfigChanged: () => void;
 }
 
-// const ENV_TEMPLATE = `VITE_TURSO_DATABASE_URL=libsql://your-db-name.turso.io
-// VITE_TURSO_AUTH_TOKEN=your-token-here`;
-
-// const SETUP_STEPS = [
-//   {
-//     title: 'Install Turso CLI',
-//     command: 'curl -sSfL https://get.tur.so/install.sh | bash',
-//     note: 'Untuk Windows, gunakan PowerShell atau WSL.',
-//   },
-//   {
-//     title: 'Login ke Turso',
-//     command: 'turso auth login',
-//     note: 'Akan membuka browser untuk autentikasi.',
-//   },
-//   {
-//     title: 'Buat database baru',
-//     command: 'turso db create money-db',
-//     note: 'Ganti "money-db" dengan nama pilihan Anda.',
-//   },
-//   {
-//     title: 'Ambil URL database',
-//     command: 'turso db show money-db --url',
-//     note: 'Salin URL ini ke file .env Anda.',
-//   },
-//   {
-//     title: 'Buat auth token',
-//     command: 'turso db tokens create money-db',
-//     note: 'Salin token ini ke file .env Anda.',
-//   },
-// ];
-
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   onClose,
@@ -73,8 +39,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     text: string;
   } | null>(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  // const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  // const [copiedEnv, setCopiedEnv] = useState(false);
 
   if (!isOpen) return null;
 
@@ -94,16 +58,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         text: 'Berhasil terhubung ke Turso Database! Tabel otomatis disinkronkan.',
       });
       onConfigChanged();
-    // } else if (config.url) {
-    //   setStatusMsg({
-    //     type: 'error',
-    //     text: res.error || 'Gagal terhubung ke Turso. Periksa kembali konfigurasi .env Anda.',
-    //   });
-    // } else {
-    //   setStatusMsg({
-    //     type: 'error',
-    //     text: 'Variabel .env belum dikonfigurasi. Tambahkan VITE_TURSO_DATABASE_URL dan VITE_TURSO_AUTH_TOKEN di file .env lalu restart dev server.',
-    //   });
     }
   };
 
@@ -126,26 +80,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       text: 'Data lokal berhasil dibersihkan.',
     });
   };
-
-  // const copyToClipboard = async (text: string, index: number) => {
-  //   try {
-  //     await navigator.clipboard.writeText(text);
-  //     setCopiedIndex(index);
-  //     setTimeout(() => setCopiedIndex(null), 2000);
-  //   } catch {
-  //     // Fallback: do nothing
-  //   }
-  // };
-
-  // const copyEnvTemplate = async () => {
-  //   try {
-  //     await navigator.clipboard.writeText(ENV_TEMPLATE);
-  //     setCopiedEnv(true);
-  //     setTimeout(() => setCopiedEnv(false), 2000);
-  //   } catch {
-  //     // Fallback: do nothing
-  //   }
-  // };
 
   const dbErr = getDbLastError();
 
@@ -269,89 +203,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <CloudOff className="w-3.5 h-3.5" /> Gunakan Local Storage
             </button>
           )}
-        </div>
-
-        {/* How to Connect Guide */}
-        <div className="space-y-3">
-          {/* <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-              <Terminal className="w-3.5 h-3.5 text-slate-400" />
-              Cara Menghubungkan ke Turso DB
-            </h4>
-            <a
-              href="https://turso.tech"
-              target="_blank"
-              rel="noreferrer"
-              className="text-emerald-400 hover:underline flex items-center gap-1 text-[11px]"
-            >
-              turso.tech <ExternalLink className="w-3 h-3" />
-            </a>
-          </div> */}
-
-          {/* Step-by-step */}
-          {/* <div className="space-y-2">
-            {SETUP_STEPS.map((step, i) => (
-              <div key={i} className="bg-slate-800/60 rounded-xl border border-slate-700/60 p-3">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="w-5 h-5 rounded-md bg-slate-700 text-slate-300 flex items-center justify-center text-[10px] font-bold shrink-0">
-                    {i + 1}
-                  </span>
-                  <span className="text-xs font-semibold text-slate-200">{step.title}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <code className="flex-1 text-[11px] bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-700/60 text-emerald-400 font-mono select-all">
-                    {step.command}
-                  </code>
-                  <button
-                    type="button"
-                    onClick={() => copyToClipboard(step.command, i)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors shrink-0"
-                    title="Salin"
-                  >
-                    {copiedIndex === i ? (
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                </div>
-                <p className="text-[10px] text-slate-500 mt-1">{step.note}</p>
-              </div>
-            ))}
-          </div> */}
-
-          {/* .env File Template */}
-          {/* <div className="bg-slate-800/60 rounded-xl border border-slate-700/60 p-3">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-md bg-teal-900/60 text-teal-400 flex items-center justify-center text-[10px] font-bold shrink-0">
-                  6
-                </span>
-                Tambahkan ke file <code className="bg-slate-900/80 px-1.5 py-0.5 rounded text-emerald-400 border border-slate-700/60 text-[11px]">.env</code>
-              </span>
-              <button
-                type="button"
-                onClick={copyEnvTemplate}
-                className="flex items-center gap-1 px-2 py-1 text-[10px] font-medium rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-              >
-                {copiedEnv ? (
-                  <>
-                    <CheckCircle className="w-3 h-3 text-emerald-400" /> Tersalin!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3" /> Salin Template
-                  </>
-                )}
-              </button>
-            </div>
-            <pre className="text-[11px] bg-slate-900/80 px-2.5 py-2 rounded-lg border border-slate-700/60 text-slate-300 font-mono select-all overflow-x-auto">
-                {ENV_TEMPLATE}
-            </pre>
-            <p className="text-[10px] text-slate-500 mt-1.5">
-              Setelah menambahkan file <code className="text-slate-400">.env</code>, restart dev server (<code className="text-slate-400">bun run dev</code>) lalu klik "Hubungkan Ulang" di atas.
-            </p>
-          </div> */}
         </div>
 
         {/* Clear Local Data */}
