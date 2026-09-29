@@ -14,6 +14,7 @@ const COMMON_EXPENSE_CATEGORIES = [
   'Tagihan & Utilitas',
   'Hiburan',
   'Kesehatan',
+  'Persembahan Gereja',
   'Lainnya',
 ];
 
